@@ -1,0 +1,52 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat&display=swap");
+
+/* .menuItem .ps-menu-button {
+    background-color: #2b3b65 !important;
+} */
+
+/* .menuItem .ps-menu-button:hover {
+    background-color: #3c3f40 !important;
+    font-size: 1.1rem;
+    font-weight: bold;
+} */
+
+.menu-label {
+    font-size: 13px;
+}
+
+.hrSideBar {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    opacity: 0.15;
+}
+
+.ps-menu-suffix {
+    font-weight: bold;
+    font-size: 14;
+    color: #ffffff !important;
+}
+
+.ps-menu-button {
+    color: #adadad !important;
+    background-color: #1b253f !important;
+}
+
+.ps-menu-button:hover {
+    color: #ffffff !important;
+}
+
+.ps-menu-button .ps-open {
+    color: #ffffff;
+}
+
+.ps-menu-button .ps-active {
+    color: #ffffff;
+}
+
+.ps-menu-button .ps-disabled {
+    color: #adadad;
+}
+
+/* .ps-submenu-content .ps-menu-button {
+    padding: 0px !important;
+} */

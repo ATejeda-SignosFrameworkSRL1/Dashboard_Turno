@@ -1,0 +1,1038 @@
+/* font size 65.25% = 10 px, 1 em = 10px */
+
+
+body {
+    /*background-color: #001f10 !important;*/
+    background-color: #3c3f40 !important;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif !important;
+    text-decoration: none;
+}
+
+th,
+td {
+    vertical-align: middle;
+}
+
+.App {
+    width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/*--------------------------------------------------------------
+>>> Navbar
+----------------------------------------------------------------*/
+
+
+.swal9-input
+{
+    height: 2.625em;
+    padding: 0 .75em;
+    margin-top: 10px;
+    border: solid 1px #ccc;
+    border-radius: 3px;
+}
+
+.Navbar {
+    background-color: black !important;
+    padding: 0px !important;
+    vertical-align: middle !important;
+    display: flex;
+}
+
+.NavbarBrand {
+    font-size: 1.5em !important;
+    font-weight: 500;
+    color: white !important;
+    cursor: pointer;
+}
+
+.Nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.navLink {
+    font-size: 1.5em !important;
+    color: #fff !important;
+}
+
+.navLink:hover {
+    color: white !important;
+    transform: scale(1.05);
+}
+
+#navDropDown {
+    font-size: 2em !important;
+    color: #818181 !important;
+}
+
+.dropDownItem {
+    font-size: 1.5em !important;
+    color: #818181 !important;
+}
+
+.dropDownItem:hover {
+    color: white !important;
+}
+
+@media screen and (max-width: 767px) {
+    .NavbarBrand {
+        display: none;
+    }
+}
+
+/*--------------------------------------------------------------
+>>> Footer
+----------------------------------------------------------------*/
+
+.footer {
+    margin-top: auto;
+    justify-content: center;
+    background-color: #000000;
+}
+
+.textFooter {
+    color: #fff;
+    font-size: 16px;
+    text-align: center;
+}
+
+/*--------------------------------------------------------------
+>>> Loading Component
+----------------------------------------------------------------*/
+
+.loader {
+    width: 48px;
+    height: 48px;
+    display: block;
+    margin: 20px auto;
+    position: relative;
+    border: 3px solid #FFF;
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: animloader 2s linear infinite;
+}
+
+.loader::after {
+    content: '';
+    box-sizing: border-box;
+    width: 6px;
+    height: 24px;
+    background: #FFF;
+    transform: rotate(-45deg);
+    position: absolute;
+    bottom: -20px;
+    left: 46px;
+}
+
+@keyframes animloader {
+    0% {
+        transform: translate(-10px, -10px);
+    }
+
+    25% {
+        transform: translate(-10px, 10px);
+    }
+
+    50% {
+        transform: translate(10px, 10px);
+    }
+
+    75% {
+        transform: translate(10px, -10px);
+    }
+
+    100% {
+        transform: translate(-10px, -10px);
+    }
+}
+
+
+/*--------------------------------------------------------------
+>>> Login
+----------------------------------------------------------------*/
+
+.LoginBox {
+    width: 27em;
+    height: 25.5em;
+    /*background: #86b7fe;*/
+    background: #ffffff;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+    padding: 80px 20px;
+    border-radius: 0.75rem !important;
+}
+
+.LoginBoxLogo {
+    width: 10em;
+    height: 10em;
+    border-radius: 50%;
+    border-width: 0.5em !important;
+    border: 1px solid #3c3f40;
+    position: absolute;
+    top: -5.1em;
+    left: calc(50% - 5.05em);
+}
+
+.LoginBoxH1 {
+    margin: 0px;
+    padding-bottom: 12px;
+    text-align: center;
+    font-size: 3em !important;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif !important;
+}
+
+.LoginBoxLabel {
+    margin-bottom: 4px;
+    font-size: 1.2em !important;
+    font-weight: bold;
+    display: block;
+}
+
+.LoginBoxInput {
+    width: 100%;
+    margin-bottom: 16px;
+    height: 2.5em;
+    font-size: 1em !important;
+}
+
+.LoginBoxButton {
+    width: 100%;
+    margin-top: 4px;
+    font-family: sans-serif;
+    border: none;
+    height: 2em;
+    background-color: #000;
+    color: white;
+    font-weight: bold;
+    font-size: 1.6em;
+}
+
+/*--------------------------------------------------------------
+>>> Full Dashboard
+----------------------------------------------------------------*/
+
+/* .grid-container {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 12;
+    gap: 10px
+}
+
+.grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+  }
+
+.grid1 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+}
+
+.grid2 {
+    grid-column-start: 4;
+    grid-column-end: 11;
+}
+
+.grid3 {
+    grid-column-start: 11;
+    grid-column-end: 13;
+} */
+
+/*--------------------------------------------------------------
+>>> titulos 
+----------------------------------------------------------------*/
+
+.rowTitle {
+    background-color: #6c757c;
+    color: #FFFFFF !important;
+    text-align: center;
+    border-style: solid;
+    border-color: #6c757c;
+    border-radius: 0.5em;
+    /*margin-top: 0.5em !important;
+    margin-bottom: 0.5em !important;*/
+	margin:0.4em !important;
+    padding: 0px !important;
+}
+
+.title {
+    margin: 0px;
+    padding: 4px;
+    font-size: 20px;
+}
+
+/*--------------------------------------------------------------
+>>> Cantidad de turnos
+----------------------------------------------------------------*/
+
+.canturnoYellow {
+    text-align: center;
+    background-color: #ffc107 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.canturnoGray {
+    text-align: center;
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.canturnoRed {
+    text-align: center;
+    background-color: #dc3545 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.canturnoOrange {
+    text-align: center;
+    background-color: #ff6200 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.canturnoCardTitleYellow {
+    color: #3c3f40;
+    margin: 0px;
+    padding-bottom: 8px;
+}
+
+.canturnoCardTitleAll {
+    color: #FFFFFF;
+    margin: 0px;
+    padding-bottom: 8px;
+}
+
+.canturnoCardBody {
+    width: 70px;
+    padding: 3px;
+    background-color: #FFFFFF;
+    border-radius: 0.25em;
+}
+
+.canturnoCardBody h6 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+/*--------------------------------------------------------------
+>>> Turnos transferidos
+----------------------------------------------------------------*/
+
+.turTransferidoYellow {
+    text-align: center;
+    background-color: #ffc107 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.turTransferidoGray {
+    text-align: center;
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.turTransferidoRed {
+    text-align: center;
+    background-color: #dc3545 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.turTransferidoOrange {
+    text-align: center;
+    background-color: #ff6200 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 10em;
+    padding: 5px;
+}
+
+.turTransferidoCardTitleYellow {
+    color: #3c3f40;
+    margin: 0px;
+    padding-bottom: 8px;
+}
+
+.turTransferidoCardTitleAll {
+    color: #FFFFFF;
+    margin: 0px;
+    padding-bottom: 8px;
+}
+
+.turTransferidoCardBody {
+    width: 70px;
+    padding: 3px;
+    background-color: #FFFFFF;
+    border-radius: 0.25em;
+}
+
+.turTransferidoCardBody h6 {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+
+/*--------------------------------------------------------------
+>>> Colaborador Online
+----------------------------------------------------------------*/
+
+.colabadoresOnline .cardGray {
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.colabadoresOnline .cardYellow {
+    background-color: #ffc107;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.colabadoresOnline .cardRed {
+    background-color: #dc3545;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.colabadoresOnline .cardGreen {
+    background-color: #28a745;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.rowImgName {
+    height: 80px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: white !important;
+}
+
+.cardImg {
+    align-items: center;
+    width: 4em;
+    height: 4em;
+    object-fit: cover;
+    border-radius: 4.5em;
+}
+
+.cardName h5 {
+    font-size: 14px !important;
+    text-align: center;
+    margin-top: 0px;
+}
+
+.cardName h6 {
+    font-size: 12px !important;
+    text-align: center;
+    margin-bottom: 0px;
+}
+
+.rowEstacionTurno {
+    margin-top: 8px;
+    /* padding: 8px; */
+    border-radius: 0.25em;
+}
+
+.estacion {
+    width: 85px;
+    height: 82px;
+    border-radius: 0.25em;
+    background-color: white;
+    padding: 4px;
+}
+
+.estacion h5 {
+    font-size: 18px !important;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 4px;
+}
+
+.estacion h6 {
+    font-size: 14px !important;
+    text-align: center;
+}
+
+.turno {
+    width: 85px;
+    height: 82px;
+    border-radius: 0.25em;
+    background-color: white;
+}
+
+.turno h5 {
+    font-size: 16px !important;
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.turno h6 {
+    font-size: 14px !important;
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 0px;
+}
+
+.rowEstatus {
+    margin-top: 8px;
+    height: 35px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: white !important;
+}
+
+.rowEstatus h6 {
+    font-size: 14px !important;
+    margin: 0;
+    text-align: center;
+}
+
+.rowPaciente {
+    margin-top: 8px;
+    height: 35px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: white !important;
+}
+
+.rowPaciente h6 {
+    font-size: 14px !important;
+    margin: 0;
+    text-align: center;
+}
+
+.rowPacienteNull {
+    margin-top: 8px;
+    height: 35px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: transparent !important;
+}
+
+/*--------------------------------------------------------------
+>>> Colaborador Offline
+----------------------------------------------------------------*/
+
+.colaboradoresOffline {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+
+.colaboradoresOffline .cardGray {
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    padding: 4px;
+}
+
+.rowImgNameOff {
+    height: 95px;
+    padding: 8px;
+    border-radius: 0.25em;
+}
+
+.cardImgOff {
+    width: 4em;
+    height: 4em;
+    object-fit: cover;
+    border-radius: 4.5em;
+}
+
+.error {
+    border: 0.3em solid #dc3545;
+}
+
+.normal {
+    border: 0.3em solid rgb(255, 255, 255);
+}
+
+.cardNameOff h5 {
+    font-size: 14px !important;
+    text-align: center;
+    margin-top: 0px;
+    margin-bottom: 0;
+    color: white;
+}
+
+.cardNameOff h6 {
+    font-size: 12px !important;
+    text-align: center;
+    margin-top: 6px;
+    margin-bottom: 0;
+    color: white;
+}
+
+/*--------------------------------------------------------------
+>>> Estatus estaciones cards
+----------------------------------------------------------------*/
+
+.estacionesCards {
+    margin: 0.5em !important;
+}
+
+.estacionesCards .cardGray {
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.estacionesCards .cardGreen {
+    background-color: #28a745 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.estacionesCards .cardBlue {
+    background-color: #0275d8 !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.estacionesCards .cardGreenSpecial {
+    background-color: #19692c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+/*--------------------------------------------------------------
+>>> Operadores Reporte
+----------------------------------------------------------------*/
+
+.estatusOperadores {
+    margin: 0.5em !important;
+}
+
+.estatusOperadores .cardGray {
+    background-color: #6c757c !important;
+    border-radius: 0.50em !important;
+    margin-bottom: 1em;
+    width: 12em;
+    padding: 6px;
+}
+
+.rowReporte {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: white !important;
+}
+
+.rowReporte h5 {
+    font-size: 12px !important;
+    font-weight: 500;
+    margin-top: 0px;
+    margin-bottom: 0;
+    color: black;
+}
+
+.rowReporte h6 {
+    font-size: 12px !important;
+    margin-top: 0px;
+    margin-bottom: 0;
+    color: black;
+}
+
+.tipoReporte {
+    text-align: right;
+}
+
+.cantidadReporte {
+    text-align: left;
+}
+
+.rowReporte .row {
+    margin-top: 4px;
+}
+
+.rowEstatusLogin {
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 0.25em;
+    background-color: white !important;
+}
+
+/*--------------------------------------------------------------
+>>> ajustes de Responsive
+----------------------------------------------------------------*/
+
+/* footer */
+@media screen and (max-width: 400px) {
+    .textFooter {
+        font-size: 12px !important;
+    }
+}
+
+@media screen and (max-width: 460px) {
+    .textFooter {
+        font-size: 14px;
+    }
+}
+
+/* login */
+@media screen and (max-width: 460px) {
+    .LoginBox {
+        width: 21em;
+        height: 25.5em;
+    }
+}
+
+/* cantidad de turnos */
+.cantidadDeTurnos {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+@media screen and (max-width: 1407px) {
+    .cantidadDeTurnos {
+        justify-content: center !important;
+    }
+}
+
+.TurnosTransferidos {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+@media screen and (max-width: 1407px) {
+    .cantidadDeTurnos {
+        justify-content: center !important;
+    }
+}
+
+/* colaboradores cards Online */
+@media screen and (max-width: 400px) {
+
+    .colabadoresOnline .cardGray {
+        width: 165px
+    }
+
+    .colabadoresOnline .cardYellow {
+        width: 165px
+    }
+
+    .colabadoresOnline .cardRed {
+        width: 165px
+    }
+
+    .colabadoresOnline .cardGreen {
+        width: 165px
+    }
+
+    .cardImg {
+        width: 3.5em;
+        height: 3.5em;
+    }
+
+    .estacion {
+        width: 71px;
+        height: 82px;
+    }
+
+    .turno {
+        width: 71px;
+        height: 82px;
+    }
+
+}
+
+@media screen and (max-width: 1199px) {
+    .colabadoresOnline {
+        display: flex !important;
+        justify-content: center !important;
+    }
+}
+
+/* colaboradores cards Offline */
+@media screen and (min-width: 1599px) {
+    .cardNameOff h5 {
+        font-size: 15px !important;
+
+    }
+
+    .cardNameOff h6 {
+        font-size: 14px !important;
+
+    }
+
+    .cardImgOff {
+        text-align: center;
+        width: 4.5em;
+        height: 4.5em;
+    }
+}
+
+/* Estatus estaciones Cards */
+@media screen and (max-width: 1199px) {
+    .estacionesCards {
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .estacionesCards {
+        margin: 0em !important;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .estacionesCards .cardGray {
+        width: 165px
+    }
+
+    .estacionesCards .cardGreen {
+        width: 165px
+    }
+
+    .estacionesCards .cardBlue {
+        width: 165px
+    }
+
+    .estacionesCards .cardGreenSpecial {
+        width: 165px
+    }
+}
+
+/* Estatus operadores Reporte */
+@media screen and (max-width: 1199px) {
+    .estatusOperadores {
+        display: flex !important;
+        justify-content: center !important;
+    }
+
+    .estatusOperadores {
+        margin: 0em !important;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    .estatusOperadores .cardGray {
+        width: 165px
+    }
+}
+
+/*--------------------------------------------------------------
+>>> Estatus turnos transferidos
+----------------------------------------------------------------*/
+.custom-accordion-item {
+    color: var(--bs-accordion-color);
+    background-color: var(--bs-accordion-bg);
+    border: none !important;
+}
+
+.custom-accordion .accordion-button {
+	background-color: #000000 !important;
+	background-image: linear-gradient(180deg, #dee2e64f, #000000);
+    /*background-color: #6c757c !important; */
+    color: #ffffff !important;
+    height: 48px !important;
+}
+
+
+.custom-accordion .accordion-button::after {
+    filter: invert(1);
+}
+
+.custom-accordion .accordion-button:focus {
+    box-shadow: none !important;
+}
+
+.tabsAreas .nav-link {
+    background-color: #000000 !important;
+    border: solid 2px #3c3f40 !important;
+    color: #ffffff !important;
+    height: 48px !important;
+    min-width: 150px !important;
+    padding: 8px !important;
+}
+
+.tabsAreas .nav-link.active {
+    background-color: #3c3f40 !important;
+    border-color: #ffffff !important;
+}
+
+/*--------------------------------------------------------------
+>>> Tabla usuarios
+----------------------------------------------------------------*/
+
+.custom-switch {
+    display: flex;
+    justify-content: space-between !important;
+    align-items: center !important;
+}
+
+.custom-switch .custom-control-label {
+    order: -1;
+    /* Cambia el orden del texto a la izquierda */
+}
+
+.form-switch .form-check-input {
+    width: 3em !important;
+    height: 1.5em !important;
+    cursor: pointer;
+}
+
+/*--------------------------------------------------------------
+>>> Form Check General
+----------------------------------------------------------------*/
+
+.form-check-input {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    border-color: #c8c8c8 !important;
+}
+
+.form-check-input:checked {
+    border-color: #0d6efd !important;
+}
+
+/*--------------------------------------------------------------
+>>> Form Check Green
+----------------------------------------------------------------*/
+
+.form-check-green .form-check-input {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    border-color: #000000 !important;
+}
+
+.form-check-green .form-check-input:checked {
+    width: 1.2em !important;
+    height: 1.2em !important;
+    border-color: #198754 !important;
+    background-color: #198754 !important;
+}
+
+/*--------------------------------------------------------------
+>>> Input Search
+----------------------------------------------------------------*/
+
+.btn-iconUser {
+    width: 16px;
+    height: 16px;
+}
+
+@media (min-width: 768px) {
+    .btn-iconUser {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+@media (max-width: 700px) {
+    .specialButtonsUser {
+        display: none;
+    }
+}
+
+@media (min-width: 768px) {
+    .generalInputs {
+        justify-content: start;
+    }
+}
+
+/*--------------------------------------------------------------
+>>> Boton de agregar en configuracion
+----------------------------------------------------------------*/
+
+@media screen and (max-width: 600px) {
+    .addButtonConfig {
+        padding-top: 10px;
+    }
+}
+
+
+.swal2-input
+{
+  border-color:#ccc;
+  border-radius:4px;
+}
+
+.custom-header
+{
+	background-color: #000000 !important;
+	background-image: linear-gradient(180deg, #dee2e64f, #000000);
+	color: #ffffff !important;
+	height: 48px !important;
+	padding-top:5px;
+	padding-left:10px;
+	margin-bottom: 10px !important;
+}
+
+.ps-menu-button 
+{
+  background-color: #000000 !important;
+}
+
+/*--------------------------------------------------------------
+>>> Configuracion home page
+----------------------------------------------------------------*/
+
+.listGroup-configRecommended {
+    color: #adadad !important;
+    /*background-color: #1b253f !important;*/
+	background-color: #000000 !important;
+    border-color: #3c3f40 !important;
+    transition-duration: 500ms !important;
+}
+
+.listGroup-configRecommended:hover {
+    color: #ffffff !important;
+    transform: scale(1.01);
+}
+
+.bento-box {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    height: 100%;
+}
