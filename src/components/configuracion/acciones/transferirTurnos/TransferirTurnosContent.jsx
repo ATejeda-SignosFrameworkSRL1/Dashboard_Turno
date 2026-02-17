@@ -5,55 +5,40 @@ import { Loading } from "../../../utils/Loading";
 import { TableTransferirTurnos } from "./TableTransferirTurnos";
 import { tiempoAleatorio } from "../../../../helpers/functions";
 
-
-// useEffect(() => {
-//   if (baseUrl && apiKey) {
-//     getTransferirTurnos();
-
-//     const intervalId = setInterval(() => {
-//       getTransferirTurnos();
-//     }, tiempoAleatorio);
-//     return () => clearInterval(intervalId);
-//   }
-// }), [baseUrl, apiKey];
-
 export const TransferirTurnosContent = () => {
   const [baseUrl, setBaseUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [transferirTurnosData, setTransferirTurnosData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [pollingEnabled, setPollingEnabled] = useState(false);
 
-  useEffect(() => {
-    if (baseUrl && apiKey) {
-      getTransferirTurnos();
-  
-      const intervalId = setInterval(() => {
-        getTransferirTurnos();
-      }, tiempoAleatorio);
-      return () => clearInterval(intervalId);
-    }
-  }), [baseUrl, apiKey];
-
-  // Cargar configuración desde appsettings.json
+  // Cargar configuración desde appsettings.json (baseUrl puede ser URL completa o ruta relativa)
   useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch('/appsettings.json');
         const config = await response.json();
-        setBaseUrl(config.VITE_APP_BASEURL);
-        setApiKey(config.VITE_APP_APIKEY);
+        let base = (config.VITE_APP_BASEURL ?? "").trim();
+        if (base && base.startsWith("http") && import.meta.env.DEV) {
+          try {
+            const u = new URL(base);
+            base = u.pathname.replace(/\/?$/, "") + "/";
+          } catch (_) {}
+        }
+        setBaseUrl(base);
+        setApiKey(config.VITE_APP_APIKEY ?? "");
       } catch (error) {
         console.error("Error al cargar appsettings.json:", error);
-        // Fallback al .env si falla
-        setBaseUrl(import.meta.env.VITE_APP_BASEURL);
-        setApiKey(import.meta.env.VITE_APP_APIKEY);
+        setBaseUrl(import.meta.env.VITE_APP_BASEURL ?? "");
+        setApiKey(import.meta.env.VITE_APP_APIKEY ?? "");
       }
     };
     loadConfig();
   }, []);
 
-  // GET - Obtener turnos del historial
-  const getTransferirTurnos = async () => {
+  // GET - Obtener turnos del historial (showError: mostrar Swal solo en primera carga para evitar loop de errores)
+  const getTransferirTurnos = async (showError = true) => {
+    if (!baseUrl || !apiKey) return;
     try {
       const response = await axios.get(
         `${baseUrl}GenericWeb?proctoken=spTransferirOperadorTurnosDashboard`,
@@ -64,15 +49,13 @@ export const TransferirTurnosContent = () => {
           },
         }
       );
-      
-      // Validar que response.data sea un array
+
       if (!Array.isArray(response.data)) {
         setTransferirTurnosData([]);
         setLoading(false);
         return;
       }
-      
-      // Mapear datos del backend a formato del componente
+
       const turnosMapeados = response.data.map((turno, index) => ({
         globalIndex: index + 1,
         IdTurno: turno.IdTurno,
@@ -86,17 +69,38 @@ export const TransferirTurnosContent = () => {
 
       setTransferirTurnosData(turnosMapeados);
       setLoading(false);
-
+      setPollingEnabled(true);
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se pudieron cargar los turnos. Por favor, intenta nuevamente.",
-        timer: 2500,
-      });
       setLoading(false);
+      if (showError) {
+        const isCors = error?.message?.includes("CORS") || error?.code === "ERR_NETWORK";
+        Swal.fire({
+          icon: "error",
+          title: "Error al conectar con la API",
+          text: isCors
+            ? "CORS o red: asegúrate de usar 'npm run dev' (el proxy evita CORS) y de que la API esté en marcha en la URL de appsettings.json."
+            : "No se pudieron cargar los turnos. Revisa appsettings.json (VITE_APP_BASEURL) y que la API esté ejecutándose.",
+          timer: 4000,
+        });
+      }
     }
   };
+
+  // Primera carga cuando tengamos baseUrl y apiKey (solo una vez; si falla no se inicia polling)
+  useEffect(() => {
+    if (baseUrl && apiKey) {
+      getTransferirTurnos(true);
+    }
+  }, [baseUrl, apiKey]);
+
+  // Polling solo después de al menos una respuesta exitosa (evita loop infinito por CORS/errores)
+  useEffect(() => {
+    if (!baseUrl || !apiKey || !pollingEnabled) return;
+    const intervalId = setInterval(() => {
+      getTransferirTurnos(false);
+    }, tiempoAleatorio);
+    return () => clearInterval(intervalId);
+  }, [baseUrl, apiKey, pollingEnabled]);
 
 
   // POST - Transferir turno
@@ -141,14 +145,6 @@ export const TransferirTurnosContent = () => {
       });
     }
   };
-
-  useEffect(() => {
-    // Solo ejecutar cuando tengamos la configuración cargada
-    if (baseUrl && apiKey) {
-      getTransferirTurnos();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [baseUrl, apiKey]);
 
   return (
     <>

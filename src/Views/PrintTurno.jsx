@@ -11,19 +11,25 @@ export const PrintTurno = () => {
   const [baseUrl, setBaseUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
 
-  // Cargar configuración desde appsettings.json
+  // Cargar configuración desde appsettings.json (en localhost, URL completa se convierte a ruta relativa para usar proxy y evitar CORS)
   useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch('/appsettings.json');
         const config = await response.json();
-        setBaseUrl(config.VITE_APP_BASEURL);
-        setApiKey(config.VITE_APP_APIKEY);
+        let base = (config.VITE_APP_BASEURL ?? "").trim();
+        if (base && base.startsWith("http") && import.meta.env.DEV) {
+          try {
+            const u = new URL(base);
+            base = u.pathname.replace(/\/?$/, "") + "/";
+          } catch (_) {}
+        }
+        setBaseUrl(base);
+        setApiKey(config.VITE_APP_APIKEY ?? "");
       } catch (error) {
         console.error("Error al cargar appsettings.json:", error);
-        // Fallback al .env si falla
-        setBaseUrl(import.meta.env.VITE_APP_BASEURL);
-        setApiKey(import.meta.env.VITE_APP_APIKEY);
+        setBaseUrl(import.meta.env.VITE_APP_BASEURL ?? "");
+        setApiKey(import.meta.env.VITE_APP_APIKEY ?? "");
       }
     };
     loadConfig();
