@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 export const TableTransferirTurnos = ({
   transferirTurnosData,
   transferirTurno,
+  abrirModalImpresion,
 }) => {
 
   const data = transferirTurnosData;
@@ -63,7 +64,7 @@ export const TableTransferirTurnos = ({
       [idTurno]: true
     }));
 
-    window.open(`/printTurno/${idTurno}`, '_blank');
+    abrirModalImpresion(idTurno);
   };
   
   return (
@@ -104,10 +105,17 @@ export const TableTransferirTurnos = ({
           <tbody>
             {currentItems.length ? (
               currentItems?.map((turno) => {
-                const esPreferencial = turno.EsAreaPreferencial === true;
+                const esPreferencial =
+                  turno.EsAreaPreferencial === true && turno.EsAreaEspecial !== true;
+                const esEspecial =
+                  turno.EsAreaEspecial === true && turno.EsAreaPreferencial !== true;
                 const estiloPreferencial = {
-                  color: esPreferencial ? '#237FFA' : '#6c757d',
-                  fontWeight: esPreferencial ? '600' : 'normal'
+                  color: esPreferencial
+                    ? '#237FFA'
+                    : esEspecial
+                      ? '#7B00AB'
+                      : '#6c757d',
+                  fontWeight: esPreferencial || esEspecial ? '600' : 'normal'
                 };
                 return (
                 <tr 
@@ -193,5 +201,6 @@ export const TableTransferirTurnos = ({
 TableTransferirTurnos.propTypes = {
   transferirTurnosData: PropTypes.array.isRequired,
   transferirTurno: PropTypes.func.isRequired,
+  abrirModalImpresion: PropTypes.func.isRequired,
 };
 

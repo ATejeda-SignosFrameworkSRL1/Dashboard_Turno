@@ -1,35 +1,29 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import api from "../../../../config/api";
 import Swal from "sweetalert2";
 import { Loading } from "../../../utils/Loading";
 import { TableTransferirTurnos } from "./TableTransferirTurnos";
+import { ModalImprimirTurno } from "./ModalImprimirTurno";
 import { tiempoAleatorio } from "../../../../helpers/functions";
 
 export const TransferirTurnosContent = () => {
-  const [baseUrl, setBaseUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [transferirTurnosData, setTransferirTurnosData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pollingEnabled, setPollingEnabled] = useState(false);
+  const [showPrintModal, setShowPrintModal] = useState(false);
+  const [selectedTurnoId, setSelectedTurnoId] = useState(null);
 
-  // Cargar configuración desde appsettings.json (baseUrl puede ser URL completa o ruta relativa)
+  // Cargar configuración desde appsettings.json
   useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch('/appsettings.json');
         const config = await response.json();
-        let base = (config.VITE_APP_BASEURL ?? "").trim();
-        if (base && base.startsWith("http") && import.meta.env.DEV) {
-          try {
-            const u = new URL(base);
-            base = u.pathname.replace(/\/?$/, "") + "/";
-          } catch (_) {}
-        }
-        setBaseUrl(base);
+        localStorage.setItem("VITE_APP_BASEURL", config.VITE_APP_BASEURL ?? "");
         setApiKey(config.VITE_APP_APIKEY ?? "");
       } catch (error) {
         console.error("Error al cargar appsettings.json:", error);
-        setBaseUrl(import.meta.env.VITE_APP_BASEURL ?? "");
         setApiKey(import.meta.env.VITE_APP_APIKEY ?? "");
       }
     };
@@ -38,10 +32,10 @@ export const TransferirTurnosContent = () => {
 
   // GET - Obtener turnos del historial (showError: mostrar Swal solo en primera carga para evitar loop de errores)
   const getTransferirTurnos = async (showError = true) => {
-    if (!baseUrl || !apiKey) return;
+    if (!apiKey) return;
     try {
-      const response = await axios.get(
-        `${baseUrl}GenericWeb?proctoken=spTransferirOperadorTurnosDashboard`,
+      const response = await api.get(
+        "GenericWeb?proctoken=spTransferirOperadorTurnosDashboard",
         {
           headers: {
             "Content-Type": "application/json",
@@ -64,7 +58,8 @@ export const TransferirTurnosContent = () => {
         Fecha: turno["Fecha de Creación"],
         Espera: turno.Espera,
         Observacion: turno.Referencia,
-        EsAreaPreferencial: turno.EsAreaPreferencial
+        EsAreaPreferencial: turno.EsAreaPreferencial === true,
+        EsAreaEspecial: turno.EsAreaEspecial === true,
       }));
 
       setTransferirTurnosData(turnosMapeados);
@@ -88,26 +83,26 @@ export const TransferirTurnosContent = () => {
 
   // Primera carga cuando tengamos baseUrl y apiKey (solo una vez; si falla no se inicia polling)
   useEffect(() => {
-    if (baseUrl && apiKey) {
+    if (apiKey) {
       getTransferirTurnos(true);
     }
-  }, [baseUrl, apiKey]);
+  }, [apiKey]);
 
   // Polling solo después de al menos una respuesta exitosa (evita loop infinito por CORS/errores)
   useEffect(() => {
-    if (!baseUrl || !apiKey || !pollingEnabled) return;
+    if (!apiKey || !pollingEnabled) return;
     const intervalId = setInterval(() => {
       getTransferirTurnos(false);
     }, tiempoAleatorio);
     return () => clearInterval(intervalId);
-  }, [baseUrl, apiKey, pollingEnabled]);
+  }, [apiKey, pollingEnabled]);
 
 
   // POST - Transferir turno
   const transferirTurno = async (idTurno) => {
     try {
-      await axios.post(
-        `${baseUrl}GenericWeb?proctoken=spTransferirOperadorTurnosDashboard`,
+      await api.post(
+        "GenericWeb?proctoken=spTransferirOperadorTurnosDashboard",
         {
           IdTurno: idTurno
         },
@@ -146,6 +141,16 @@ export const TransferirTurnosContent = () => {
     }
   };
 
+  const abrirModalImpresion = (idTurno) => {
+    setSelectedTurnoId(idTurno);
+    setShowPrintModal(true);
+  };
+
+  const cerrarModalImpresion = () => {
+    setShowPrintModal(false);
+    setSelectedTurnoId(null);
+  };
+
   return (
     <>
       <div className="d-flex flex-column px-3 mt-3" style={{ width: "100%" }}>
@@ -158,9 +163,16 @@ export const TransferirTurnosContent = () => {
           <TableTransferirTurnos
             transferirTurnosData={transferirTurnosData}
             transferirTurno={transferirTurno}
+            abrirModalImpresion={abrirModalImpresion}
           />
         )}
       </div>
+      <ModalImprimirTurno
+        show={showPrintModal}
+        onHide={cerrarModalImpresion}
+        idTurno={selectedTurnoId}
+        apiKey={apiKey}
+      />
     </>
   );
 };

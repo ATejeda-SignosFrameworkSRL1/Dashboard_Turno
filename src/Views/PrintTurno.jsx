@@ -2,33 +2,34 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Button, Container } from "react-bootstrap";
 import { BsPrinterFill } from "react-icons/bs";
-import axios from "axios";
+import api from "../config/api";
 
 export const PrintTurno = () => {
   const { idTurno } = useParams();
   const [turnoData, setTurnoData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [baseUrl, setBaseUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
 
-  // Cargar configuración desde appsettings.json (en localhost, URL completa se convierte a ruta relativa para usar proxy y evitar CORS)
+  const formatDateOnly = (value) => {
+    if (!value) return "";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return String(value);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    return `${year}/${month}/${day}`;
+  };
+
+  // Cargar configuración desde appsettings.json
   useEffect(() => {
     const loadConfig = async () => {
       try {
         const response = await fetch('/appsettings.json');
         const config = await response.json();
-        let base = (config.VITE_APP_BASEURL ?? "").trim();
-        if (base && base.startsWith("http") && import.meta.env.DEV) {
-          try {
-            const u = new URL(base);
-            base = u.pathname.replace(/\/?$/, "") + "/";
-          } catch (_) {}
-        }
-        setBaseUrl(base);
+        localStorage.setItem("VITE_APP_BASEURL", config.VITE_APP_BASEURL ?? "");
         setApiKey(config.VITE_APP_APIKEY ?? "");
       } catch (error) {
         console.error("Error al cargar appsettings.json:", error);
-        setBaseUrl(import.meta.env.VITE_APP_BASEURL ?? "");
         setApiKey(import.meta.env.VITE_APP_APIKEY ?? "");
       }
     };
@@ -46,8 +47,8 @@ export const PrintTurno = () => {
         };
         
         // Usar el procedimiento de transferir turnos para obtener todos los turnos
-        const response = await axios.get(
-          `${baseUrl}GenericWeb?proctoken=spTransferirOperadorTurnosDashboard`,
+        const response = await api.get(
+          "GenericWeb?proctoken=spTransferirOperadorTurnosDashboard",
           config
         );
         
@@ -66,7 +67,8 @@ export const PrintTurno = () => {
               Fecha: turnoEncontrado["Fecha de Creación"],
               Espera: turnoEncontrado.Espera,
               Observacion: turnoEncontrado.Referencia,
-              EsAreaPreferencial: turnoEncontrado.EsAreaPreferencial,
+              EsAreaPreferencial: turnoEncontrado.EsAreaPreferencial === true,
+              EsAreaEspecial: turnoEncontrado.EsAreaEspecial === true,
               Estado: "En espera"
             };
             setTurnoData(turnoMapeado);
@@ -80,11 +82,11 @@ export const PrintTurno = () => {
     };
 
     // Solo ejecutar cuando tengamos la configuración cargada
-    if (idTurno && baseUrl && apiKey) {
+    if (idTurno && apiKey) {
       getTurnoDetails();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [idTurno, baseUrl, apiKey]);
+  }, [idTurno, apiKey]);
 
   const handlePrint = () => {
     window.print();
@@ -148,7 +150,12 @@ export const PrintTurno = () => {
             fontWeight: "bold",
             marginBottom: "15px",
             letterSpacing: "8px",
-            color: "#000"
+            color:
+              turnoData.EsAreaPreferencial === true && turnoData.EsAreaEspecial !== true
+                ? "#237FFA"
+                : turnoData.EsAreaEspecial === true && turnoData.EsAreaPreferencial !== true
+                  ? "#7B00AB"
+                  : "#000"
             }}>
             {turnoData.Turno}
             </h1>
@@ -157,25 +164,16 @@ export const PrintTurno = () => {
             <div style={{
             fontSize: "1.8rem",
             marginBottom: "10px",
-            color: "#333",
+            color:
+              turnoData.EsAreaPreferencial === true && turnoData.EsAreaEspecial !== true
+                ? "#237FFA"
+                : turnoData.EsAreaEspecial === true && turnoData.EsAreaPreferencial !== true
+                  ? "#7B00AB"
+                  : "#333",
             fontWeight: "500"
             }}>
             {turnoData.Area}
             </div>
-
-            {/* PREFERENCIAL */}
-            {turnoData.EsAreaPreferencial && (
-            <div style={{
-                fontSize: "1.3rem",
-                fontWeight: "700",
-                marginBottom: "30px",
-                marginTop: "15px",
-                color: "#000",
-                letterSpacing: "3px"
-            }}>
-                ★ PREFERENCIAL ★
-            </div>
-            )}
 
             {/* REFERENCIA */}
             <div style={{
@@ -199,16 +197,6 @@ export const PrintTurno = () => {
             {turnoData.Observacion}
             </div>
 
-            {/* NOMBRE (si lo tienes dentro de referencia o viene de API) */}
-            <div style={{
-            fontSize: "1.5rem",
-            marginBottom: "35px",
-            fontWeight: "500",
-            color: "#333"
-            }}>
-            {turnoData.NombreCliente ?? "Nombre del Cliente"}
-            </div>
-
             {/* FECHA DE CREACIÓN */}
             <div style={{ 
                 fontSize: "1.1rem", 
@@ -222,7 +210,7 @@ export const PrintTurno = () => {
             FECHA DE CREACIÓN
             </div>
             <div style={{ fontSize: "1.4rem", marginBottom: "25px", fontWeight: "500" }}>
-            {turnoData.Fecha}
+            {formatDateOnly(turnoData.Fecha)}
             </div>
 
             {/* TIEMPO DE ESPERA */}
