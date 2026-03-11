@@ -104,7 +104,8 @@ export const TransferirTurnosContent = () => {
       await api.post(
         "GenericWeb?proctoken=spTransferirOperadorTurnosDashboard",
         {
-          IdTurno: idTurno
+          IdTurno: idTurno,
+          Accion: "T"
         },
         {
           headers: {
@@ -139,6 +140,49 @@ export const TransferirTurnosContent = () => {
         timer: 2000,
       });
     }
+    
+  };
+
+  const eliminarTurno = async (idTurno) => {
+    try {
+      await api.post(
+        "GenericWeb?proctoken=spTransferirOperadorTurnosDashboard",
+        {
+          IdTurno: idTurno,
+          Accion: "D"
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            APIKey: apiKey,
+          },
+        }
+      );
+
+      setTransferirTurnosData(prevData => 
+        prevData
+          .filter(turno => turno.IdTurno !== idTurno)
+          .map((turno, index) => ({
+            ...turno,
+            globalIndex: index + 1
+          }))
+      );
+
+      Swal.fire({
+        icon: "success",
+        title: "¡Éxito!",
+        text: `El turno ha sido eliminado con éxito!`,
+        timer: 1500,
+      });
+
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Ha ocurrido un error al eliminar el turno.`,
+        timer: 2000,
+      });
+    }
   };
 
   const abrirModalImpresion = (idTurno) => {
@@ -163,6 +207,7 @@ export const TransferirTurnosContent = () => {
           <TableTransferirTurnos
             transferirTurnosData={transferirTurnosData}
             transferirTurno={transferirTurno}
+            eliminarTurno={eliminarTurno}
             abrirModalImpresion={abrirModalImpresion}
           />
         )}

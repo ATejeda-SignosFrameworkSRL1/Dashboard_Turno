@@ -34,7 +34,32 @@ export const TableDeclinarTurnos = ({ declinarTurnosData, declinarTurno,declinar
     setItemsPerPage(selectItemsPerPage);
   };
 
-  const confirmDeclinarTurno = (idTurno, turno) => {
+  const solicitarCodigoValidacion = async () => {
+    const codigo = Math.floor(1000 + Math.random() * 9000).toString();
+    const { isConfirmed, value } = await Swal.fire({
+      title: "Validacion requerida",
+      html: `Para continuar, escribe este codigo: <strong>${codigo}</strong>`,
+      input: "text",
+      inputLabel: "Codigo de 4 digitos",
+      inputPlaceholder: "Ejemplo: 1234",
+      showCancelButton: true,
+      confirmButtonText: "Validar",
+      cancelButtonText: "Cancelar",
+      inputValidator: (inputValue) => {
+        const limpio = (inputValue ?? "").trim();
+        if (!/^\d{4}$/.test(limpio)) return "Debes escribir 4 numeros.";
+        if (limpio !== codigo) return "Codigo incorrecto.";
+        return undefined;
+      },
+    });
+
+    return isConfirmed && (value ?? "").trim() === codigo;
+  };
+
+  const confirmDeclinarTurno = async (idTurno, turno) => {
+    const codigoValido = await solicitarCodigoValidacion();
+    if (!codigoValido) return;
+
     Swal.fire({
       title: `Estas seguro de que quieres declinar este turno: ${turno}?`,
       icon: "warning",
@@ -50,7 +75,10 @@ export const TableDeclinarTurnos = ({ declinarTurnosData, declinarTurno,declinar
     });
   };
 
-  const confirmDeclinarTurnoTodos = () => {
+  const confirmDeclinarTurnoTodos = async () => {
+    const codigoValido = await solicitarCodigoValidacion();
+    if (!codigoValido) return;
+
     Swal.fire({
          title: `Estas seguro de que declinar todos los turnos?`,
          icon: "warning",

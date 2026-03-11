@@ -9,13 +9,14 @@ import PropTypes from "prop-types";
 import { PaginationTable } from "../../../utils/PaginationTable";
 import { usePagination } from "../../../../hooks/usePagination";
 import { formattedDate } from "../../../../helpers/functions";
-import { BsArrowLeftRight, BsPrinterFill } from "react-icons/bs";
+import { BsArrowLeftRight, BsPrinterFill, BsTrash } from "react-icons/bs";
 
 import Swal from "sweetalert2";
 
 export const TableTransferirTurnos = ({
   transferirTurnosData,
   transferirTurno,
+  eliminarTurno,
   abrirModalImpresion,
 }) => {
 
@@ -66,7 +67,49 @@ export const TableTransferirTurnos = ({
 
     abrirModalImpresion(idTurno);
   };
-  
+
+  const solicitarCodigoValidacion = async () => {
+    const codigo = Math.floor(1000 + Math.random() * 9000).toString();
+    const { isConfirmed, value } = await Swal.fire({
+      title: "Validacion requerida",
+      html: `Para continuar, escribe este codigo: <strong>${codigo}</strong>`,
+      input: "text",
+      inputLabel: "Codigo de 4 digitos",
+      inputPlaceholder: "Ejemplo: 1234",
+      showCancelButton: true,
+      confirmButtonText: "Validar",
+      cancelButtonText: "Cancelar",
+      inputValidator: (inputValue) => {
+        const limpio = (inputValue ?? "").trim();
+        if (!/^\d{4}$/.test(limpio)) return "Debes escribir 4 numeros.";
+        if (limpio !== codigo) return "Codigo incorrecto.";
+        return undefined;
+      },
+    });
+
+    return isConfirmed && (value ?? "").trim() === codigo;
+  };
+
+  const confirmEliminar = async (idTurno, turno, areaActual) => {
+    const { isConfirmed } = await Swal.fire({
+      title: `¿Eliminar turno: ${turno}?`,
+      html: `
+        <p>Área actual: <strong>${areaActual}</strong></p>
+        <p style="margin-top: 15px;">Esta acción eliminará el turno.</p>
+      `,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+    });
+
+    if (isConfirmed) {
+      const codigoValido = await solicitarCodigoValidacion();
+      if (!codigoValido) return;
+      eliminarTurno(idTurno);
+    }
+  };
+
   return (
     <>
       <div
@@ -169,6 +212,24 @@ export const TableTransferirTurnos = ({
                         }}
                       />
                     </Button>
+                    <Button
+                      variant="light"
+                      size="sm"
+                      style={{ 
+                        padding: "4px 4px",
+                        backgroundColor: impresosIds[turno.IdTurno] ? '#78206E' : '',
+                        borderColor: impresosIds[turno.IdTurno] ? '#78206E' : '#DCDDDE'
+                      }}
+                      onClick={() => confirmEliminar(turno.IdTurno, turno.Turno, turno.Area)}
+                    >
+                      <BsTrash
+                        style={{ 
+                          width: "20px", 
+                          height: "20px",
+                          color: impresosIds[turno.IdTurno] ? 'white' : '#6c757d'
+                        }}
+                      />
+                    </Button>
                     </div>
                   </td>
                 </tr>
@@ -201,6 +262,7 @@ export const TableTransferirTurnos = ({
 TableTransferirTurnos.propTypes = {
   transferirTurnosData: PropTypes.array.isRequired,
   transferirTurno: PropTypes.func.isRequired,
+  eliminarTurno: PropTypes.func.isRequired,
   abrirModalImpresion: PropTypes.func.isRequired,
 };
 
