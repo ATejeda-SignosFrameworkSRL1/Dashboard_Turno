@@ -264,7 +264,7 @@ export const TableTransferirTurnos = ({
                         padding: "0.75rem 1rem",
                         border: "none",
                         backgroundColor: C.headerBg,
-                        borderBottom: "1px solid #343a40",
+                        borderBottom: `1px solid ${C.headerBg}`,
                         whiteSpace: "nowrap",
                         color: C.headerText,
                       }}
@@ -389,6 +389,16 @@ export const TableTransferirTurnos = ({
                                 border: `1px solid ${C.iconBorder1}`,
                                 color: C.iconColor1,
                               }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = C.iconColor1;
+                                e.currentTarget.style.color = "white";
+                                e.currentTarget.style.borderColor = C.iconColor1;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = "white";
+                                e.currentTarget.style.color = C.iconColor1;
+                                e.currentTarget.style.borderColor = C.iconBorder1;
+                              }}
                               onClick={() =>
                                 confirmTransferirTurno(turno.IdTurno, turno.Turno, turno.Area)
                               }
@@ -414,6 +424,16 @@ export const TableTransferirTurnos = ({
                                 backgroundColor: impresosIds[turno.IdTurno] ? "#78206E" : "white",
                                 border: `1px solid ${impresosIds[turno.IdTurno] ? "#78206E" : C.iconBorder2}`,
                                 color: impresosIds[turno.IdTurno] ? "white" : C.iconColor2,
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.backgroundColor = C.iconColor2;
+                                e.currentTarget.style.color = "white";
+                                e.currentTarget.style.borderColor = C.iconColor2;
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.backgroundColor = impresosIds[turno.IdTurno] ? "#78206E" : "white";
+                                e.currentTarget.style.color = impresosIds[turno.IdTurno] ? "white" : C.iconColor2;
+                                e.currentTarget.style.borderColor = impresosIds[turno.IdTurno] ? "#78206E" : C.iconBorder2;
                               }}
                               onClick={() => handleImprimir(turno.IdTurno)}
                             >
