@@ -8,6 +8,12 @@ import { tiempoAleatorio } from "../../../../helpers/functions";
 import { BsArrowLeftRight } from "react-icons/bs";
 
 export const TransferirTurnosContent = () => {
+  const colors = (() => {
+    try { return JSON.parse(localStorage.getItem("COLORS_APP") || "{}"); }
+    catch { return {}; }
+  })();
+  const titleSize = colors.TITLE_SIZE || "1.65rem";
+
   const [apiKey, setApiKey] = useState("");
   const [transferirTurnosData, setTransferirTurnosData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -58,6 +64,7 @@ export const TransferirTurnosContent = () => {
         Area: turno.Area,
         Fecha: turno["Fecha de Creación"],
         Espera: turno.Espera,
+        SLA: turno.SLA ?? 0,
         Observacion: turno.Referencia,
         EsAreaPreferencial: turno.EsAreaPreferencial === true,
         EsAreaEspecial: turno.EsAreaEspecial === true,
@@ -214,10 +221,10 @@ export const TransferirTurnosContent = () => {
               <BsArrowLeftRight style={{ width: "1.25rem", height: "1.25rem", color: "white" }} />
             </div>
             <div>
-              <h2 className="text-white fw-bold mb-0" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
+              <h2 className="text-white fw-bold mb-0" style={{ fontSize: titleSize, lineHeight: 1.2 }}>
                 Transferir Turnos
               </h2>
-              <p className="mb-0" style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.82rem" }}>
+              <p className="mb-0" style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.95rem" }}>
                 Gestiona y transfiere los turnos pendientes al operador
               </p>
             </div>

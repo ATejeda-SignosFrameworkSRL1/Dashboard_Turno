@@ -3,7 +3,7 @@ Added by: Anderson  Tejeda
 Added Date: 19/11/2025: Módulo para transferir turnos entre áreas
 */
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Form, Table, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import PropTypes from "prop-types";
 import { PaginationTable } from "../../../utils/PaginationTable";
@@ -19,6 +19,24 @@ export const TableTransferirTurnos = ({
   eliminarTurno,
   abrirModalImpresion,
 }) => {
+
+  const colors = useRef((() => {
+    try { return JSON.parse(localStorage.getItem("COLORS_APP") || "{}"); }
+    catch { return {}; }
+  })()).current;
+
+  const C = {
+    headerBg:           colors.HEADER_TABLE_COLOR       || "#212529",
+    headerText:         colors.HEADER_TABLE_TEXT_COLOR  || "#ffffff",
+    tableSize:          colors.TABLE_SIZE                || "1.5rem",
+    iconColor1:         colors.ICON_COLOR_1              || "#6c757d",
+    iconBorder1:        colors.ICON_BORDER_COLOR_1       || "#dee2e6",
+    iconColor2:         colors.ICON_COLOR_2              || "#6c757d",
+    iconBorder2:        colors.ICON_BORDER_COLOR_2       || "#dee2e6",
+    iconColor3:         colors.ICON_COLOR_3              || "#dc3545",
+    iconBorder3:        colors.ICON_BORDER_COLOR_3       || "#f5c2c7",
+    iconSize:           colors.ICON_SIZE                 || "20px",
+  };
 
   const data = transferirTurnosData;
   const [itemsPerPage, setItemsPerPage] = useState(10);
@@ -122,24 +140,21 @@ export const TableTransferirTurnos = ({
     }
   };
 
-  const getEsperaColor = (espera) => {
-    if (!espera) return null;
-    const parts = espera.split(":").map(Number);
-    const totalMinutos = (parts[0] || 0) * 60 + (parts[1] || 0);
-    if (totalMinutos < 3) return { bg: "#e6f9ee", border: "#a3e4bc", color: "#198754" };
-    if (totalMinutos < 10) return { bg: "#fff8e6", border: "#ffe0a3", color: "#cc8800" };
-    return { bg: "#fce8e8", border: "#f5b3b3", color: "#dc3545" };
+  const getEsperaColor = (sla) => {
+    if (sla === 1) return { bg: "#fff8e6", border: "#ffe0a3", color: "#cc8800" };
+    if (sla === 2) return { bg: "#fce8e8", border: "#f5b3b3", color: "#dc3545" };
+    return null;
   };
 
   const getAreaChipStyle = (esPreferencial, esEspecial) => {
-    if (esPreferencial) return { bg: "#EBF4FF", border: "#BDD7FF", color: "#237FFA" };
-    if (esEspecial) return { bg: "#F5EBFF", border: "#D9ABFF", color: "#7B00AB" };
-    return { bg: "#f1f3f5", border: "#dee2e6", color: "#495057" };
+    if (esPreferencial) return { color: "#237FFA" };
+    if (esEspecial)     return { color: "#7B00AB" };
+    return { color: "#495057" };
   };
 
   const getBorderLeftColor = (esPreferencial, esEspecial) => {
     if (esPreferencial) return "#237FFA";
-    if (esEspecial) return "#7B00AB";
+    if (esEspecial)     return "#7B00AB";
     return "transparent";
   };
 
@@ -166,7 +181,7 @@ export const TableTransferirTurnos = ({
                 color: "white",
                 borderRadius: "999px",
                 padding: "0.25rem 0.75rem",
-                fontSize: "0.78rem",
+                fontSize: "0.9rem",
                 fontWeight: "600",
                 whiteSpace: "nowrap",
               }}
@@ -182,7 +197,7 @@ export const TableTransferirTurnos = ({
                   top: "50%",
                   transform: "translateY(-50%)",
                   color: "#adb5bd",
-                  fontSize: "0.85rem",
+                  fontSize: "1rem",
                   pointerEvents: "none",
                 }}
               />
@@ -194,8 +209,8 @@ export const TableTransferirTurnos = ({
                 style={{
                   paddingLeft: "2rem",
                   paddingRight: searchTerm ? "2rem" : "0.75rem",
-                  fontSize: "0.85rem",
-                  width: "260px",
+                  fontSize: "1rem",
+                  width: "280px",
                   border: "1px solid #dee2e6",
                   borderRadius: "0.375rem",
                   height: "36px",
@@ -232,9 +247,9 @@ export const TableTransferirTurnos = ({
           <Table
             hover
             className="mb-0"
-            style={{ fontSize: "0.875rem", borderCollapse: "separate", borderSpacing: 0 }}
+            style={{ fontSize: C.tableSize, borderCollapse: "separate", borderSpacing: 0 }}
           >
-            <thead style={{ backgroundColor: "#212529" }}>
+            <thead style={{ backgroundColor: C.headerBg }}>
               <tr>
                 {["#", "Área", "Turno", "Referencia", "Fecha de Creación", "Espera", "Acciones"].map(
                   (col) => (
@@ -243,15 +258,15 @@ export const TableTransferirTurnos = ({
                       className="text-center"
                       style={{
                         fontWeight: "600",
-                        fontSize: "0.78rem",
+                        fontSize: "0.88rem",
                         letterSpacing: "0.04em",
                         textTransform: "uppercase",
                         padding: "0.75rem 1rem",
                         border: "none",
-                        backgroundColor: "#212529",
+                        backgroundColor: C.headerBg,
                         borderBottom: "1px solid #343a40",
                         whiteSpace: "nowrap",
-                        color: "white",
+                        color: C.headerText,
                       }}
                     >
                       {col}
@@ -268,7 +283,7 @@ export const TableTransferirTurnos = ({
                   const esEspecial =
                     turno.EsAreaEspecial === true && turno.EsAreaPreferencial !== true;
                   const areaChip = getAreaChipStyle(esPreferencial, esEspecial);
-                  const esperaColor = getEsperaColor(turno.Espera);
+                  const esperaColor = getEsperaColor(turno.SLA);
                   const borderLeft = getBorderLeftColor(esPreferencial, esEspecial);
                   const isOdd = idx % 2 === 1;
 
@@ -297,17 +312,11 @@ export const TableTransferirTurnos = ({
                       </td>
 
                       {/* Área como chip */}
-                      <td className="text-center" style={{ padding: "0.75rem 0.75rem" }}>
+                      <td className="text-center" style={{ padding: "0.75rem 1rem" }}>
                         <span
                           style={{
-                            display: "inline-block",
-                            backgroundColor: areaChip.bg,
                             color: areaChip.color,
-                            border: `1px solid ${areaChip.border}`,
-                            borderRadius: "999px",
-                            padding: "0.2rem 0.7rem",
-                            fontSize: "0.78rem",
-                            fontWeight: "600",
+                            fontWeight: esPreferencial || esEspecial ? "600" : "400",
                           }}
                         >
                           {turno.Area}
@@ -345,17 +354,17 @@ export const TableTransferirTurnos = ({
                         {formattedDate(turno.Fecha)}
                       </td>
 
-                      {/* Espera con color semántico */}
+                      {/* Espera con color semántico según SLA */}
                       <td className="text-center" style={{ padding: "0.75rem 1rem" }}>
-                        {turno.Espera && esperaColor ? (
+                        {turno.Espera ? (
                           <span
                             style={{
-                              backgroundColor: esperaColor.bg,
-                              border: `1px solid ${esperaColor.border}`,
-                              color: esperaColor.color,
+                              backgroundColor: esperaColor ? esperaColor.bg : "#f8f9fa",
+                              border: `1px solid ${esperaColor ? esperaColor.border : "#dee2e6"}`,
+                              color: esperaColor ? esperaColor.color : "#495057",
                               borderRadius: "999px",
-                              padding: "0.2rem 0.65rem",
-                              fontSize: "0.8rem",
+                              padding: "0.25rem 0.75rem",
+                              fontSize: "0.9rem",
                               fontWeight: "600",
                             }}
                           >
@@ -371,19 +380,20 @@ export const TableTransferirTurnos = ({
                         <div className="d-flex gap-2 justify-content-center">
                           <OverlayTrigger placement="top" overlay={<Tooltip>Transferir turno</Tooltip>}>
                             <Button
-                              variant="outline-dark"
                               size="sm"
                               style={{
                                 borderRadius: "0.375rem",
                                 padding: "5px 8px",
                                 lineHeight: 1,
-                                border: "1px solid #dee2e6",
+                                backgroundColor: "white",
+                                border: `1px solid ${C.iconBorder1}`,
+                                color: C.iconColor1,
                               }}
                               onClick={() =>
                                 confirmTransferirTurno(turno.IdTurno, turno.Turno, turno.Area)
                               }
                             >
-                              <BsArrowLeftRight style={{ width: "16px", height: "16px" }} />
+                              <BsArrowLeftRight style={{ width: C.iconSize, height: C.iconSize }} />
                             </Button>
                           </OverlayTrigger>
 
@@ -402,12 +412,12 @@ export const TableTransferirTurnos = ({
                                 padding: "5px 8px",
                                 lineHeight: 1,
                                 backgroundColor: impresosIds[turno.IdTurno] ? "#78206E" : "white",
-                                border: `1px solid ${impresosIds[turno.IdTurno] ? "#78206E" : "#dee2e6"}`,
-                                color: impresosIds[turno.IdTurno] ? "white" : "#6c757d",
+                                border: `1px solid ${impresosIds[turno.IdTurno] ? "#78206E" : C.iconBorder2}`,
+                                color: impresosIds[turno.IdTurno] ? "white" : C.iconColor2,
                               }}
                               onClick={() => handleImprimir(turno.IdTurno)}
                             >
-                              <BsPrinterFill style={{ width: "16px", height: "16px" }} />
+                              <BsPrinterFill style={{ width: C.iconSize, height: C.iconSize }} />
                             </Button>
                           </OverlayTrigger>
 
@@ -419,22 +429,22 @@ export const TableTransferirTurnos = ({
                                 padding: "5px 8px",
                                 lineHeight: 1,
                                 backgroundColor: "white",
-                                border: "1px solid #f5c2c7",
-                                color: "#dc3545",
+                                border: `1px solid ${C.iconBorder3}`,
+                                color: C.iconColor3,
                               }}
                               onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = "#dc3545";
+                                e.currentTarget.style.backgroundColor = C.iconColor3;
                                 e.currentTarget.style.color = "white";
-                                e.currentTarget.style.borderColor = "#dc3545";
+                                e.currentTarget.style.borderColor = C.iconColor3;
                               }}
                               onMouseLeave={(e) => {
                                 e.currentTarget.style.backgroundColor = "white";
-                                e.currentTarget.style.color = "#dc3545";
-                                e.currentTarget.style.borderColor = "#f5c2c7";
+                                e.currentTarget.style.color = C.iconColor3;
+                                e.currentTarget.style.borderColor = C.iconBorder3;
                               }}
                               onClick={() => confirmEliminar(turno.IdTurno, turno.Turno, turno.Area)}
                             >
-                              <BsTrash style={{ width: "16px", height: "16px" }} />
+                              <BsTrash style={{ width: C.iconSize, height: C.iconSize }} />
                             </Button>
                           </OverlayTrigger>
                         </div>
@@ -447,7 +457,7 @@ export const TableTransferirTurnos = ({
                   <td colSpan={7} style={{ padding: "3.5rem 1rem", border: "none" }}>
                     <div className="d-flex flex-column align-items-center gap-2" style={{ color: "#adb5bd" }}>
                       <BsInboxes style={{ width: "2.5rem", height: "2.5rem" }} />
-                      <span style={{ fontSize: "0.95rem", fontWeight: "500" }}>
+                      <span style={{ fontSize: "1.05rem", fontWeight: "500" }}>
                         {searchTerm
                           ? `Sin resultados para "${searchTerm}"`
                           : "No hay turnos disponibles para transferir"}
@@ -459,7 +469,7 @@ export const TableTransferirTurnos = ({
                             background: "none",
                             border: "none",
                             color: "#212529",
-                            fontSize: "0.82rem",
+                            fontSize: "0.92rem",
                             cursor: "pointer",
                             textDecoration: "underline",
                             padding: 0,
@@ -481,7 +491,7 @@ export const TableTransferirTurnos = ({
           className="d-flex flex-wrap justify-content-between align-items-center px-4 py-3 gap-3"
           style={{ borderTop: "1px solid #e9ecef", backgroundColor: "#f8f9fa" }}
         >
-          <span style={{ fontSize: "0.82rem", color: "#6c757d" }}>
+          <span style={{ fontSize: "0.92rem", color: "#6c757d" }}>
             {filteredData.length > 0
               ? `Mostrando ${firstIndex}–${lastIndex} de ${filteredData.length} ${
                   searchTerm ? `resultado${filteredData.length !== 1 ? "s" : ""}` : `entrada${filteredData.length !== 1 ? "s" : ""}`
@@ -491,13 +501,13 @@ export const TableTransferirTurnos = ({
 
           <div className="d-flex align-items-center gap-3">
             <div className="d-flex align-items-center gap-2">
-              <span style={{ fontSize: "0.82rem", color: "#6c757d", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: "0.92rem", color: "#6c757d", whiteSpace: "nowrap" }}>
                 Mostrar
               </span>
               <Form.Select
                 style={{
                   width: "4.5rem",
-                  fontSize: "0.82rem",
+                  fontSize: "0.92rem",
                   border: "1px solid #dee2e6",
                   borderRadius: "0.375rem",
                   padding: "0.25rem 0.4rem",
@@ -505,15 +515,16 @@ export const TableTransferirTurnos = ({
                   height: "32px",
                   boxShadow: "none",
                 }}
-                defaultValue={10}
+                defaultValue={25}
                 onChange={handleChangeItemsPerPage}
               >
                 <option value={10}>10</option>
                 <option value={25}>25</option>
                 <option value={50}>50</option>
                 <option value={100}>100</option>
+                <option value={99999}>Todos</option>
               </Form.Select>
-              <span style={{ fontSize: "0.82rem", color: "#6c757d", whiteSpace: "nowrap" }}>
+              <span style={{ fontSize: "0.92rem", color: "#6c757d", whiteSpace: "nowrap" }}>
                 registros
               </span>
             </div>
