@@ -5,6 +5,7 @@ import { Loading } from "../../../utils/Loading";
 import { TableTransferirTurnos } from "./TableTransferirTurnos";
 import { ModalImprimirTurno } from "./ModalImprimirTurno";
 import { tiempoAleatorio } from "../../../../helpers/functions";
+import { BsArrowLeftRight } from "react-icons/bs";
 
 export const TransferirTurnosContent = () => {
   const [apiKey, setApiKey] = useState("");
@@ -198,8 +199,31 @@ export const TransferirTurnosContent = () => {
   return (
     <>
       <div className="d-flex flex-column px-3 mt-3" style={{ width: "100%" }}>
-        <h2 className="text-white fw-bold custom-header">Transferir Turnos</h2>
-        <hr className="mt-0" style={{ border: "1px solid white" }} />
+        <div className="d-flex align-items-center mb-1">
+          <div className="d-flex align-items-center gap-3">
+            <div
+              style={{
+                backgroundColor: "rgba(255,255,255,0.12)",
+                borderRadius: "0.5rem",
+                padding: "0.55rem 0.65rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <BsArrowLeftRight style={{ width: "1.25rem", height: "1.25rem", color: "white" }} />
+            </div>
+            <div>
+              <h2 className="text-white fw-bold mb-0" style={{ fontSize: "1.4rem", lineHeight: 1.2 }}>
+                Transferir Turnos
+              </h2>
+              <p className="mb-0" style={{ color: "rgba(255,255,255,0.55)", fontSize: "0.82rem" }}>
+                Gestiona y transfiere los turnos pendientes al operador
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr className="mt-2 mb-3" style={{ border: "none", borderTop: "1px solid rgba(255,255,255,0.15)" }} />
 
         {loading ? (
           <Loading />

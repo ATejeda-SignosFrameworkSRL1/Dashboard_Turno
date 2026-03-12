@@ -85,7 +85,7 @@ export const TableHistoricoTurno = ({ historicoTurno, turno, area }) => {
         <div className="d-flex justify-content-between align-items-center mx-5">
           <p>
             Mostrando {firstIndex} a {lastIndex} de {filteredData.length}{" "}
-            entradas
+            turnos
           </p>
           <PaginationTable
             currentPage={currentPage}

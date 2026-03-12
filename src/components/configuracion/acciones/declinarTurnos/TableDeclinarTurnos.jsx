@@ -167,7 +167,7 @@ export const TableDeclinarTurnos = ({ declinarTurnosData, declinarTurno,declinar
         </Table>
         <div className="d-flex justify-content-between align-items-center mx-5">
           <p>
-            Mostrando {firstIndex} a {lastIndex} de {data.length} entradas
+            Mostrando {firstIndex} a {lastIndex} de {data.length} turnos
           </p>
           <PaginationTable
             currentPage={currentPage}
